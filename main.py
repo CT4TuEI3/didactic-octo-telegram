@@ -1,11 +1,12 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from matplotlib.patches import Patch
 
 # Указать путь к CSV файлу
 df = pd.read_csv('События-2025-09-02-2025-09-09.csv')
+
+# Гипотеза:
+# Существует положительная корреляция между временем суток (как количественной переменной)
+# и уровнем активности пользователей в приложении
 
 print("Первые 5 строк данных:")
 print(df.head())
@@ -18,7 +19,7 @@ df['datetime'] = pd.to_datetime(df['Период'], format='%Y-%m-%d %H:%M:%S')
 # Сортируем по времени для правильного отображения на графике
 df = df.sort_values('datetime')
 
-# Функция для определения времени суток по новым правилам
+# Функция для определения времени суток
 def get_time_period(hour):
     if 8 <= hour < 16:  # Первая половина дня: с 8:00 до 16:00
         return 'first_half'
@@ -45,6 +46,7 @@ plt.ylabel('Количество подключений VPN', fontsize=12)
 plt.grid(True, alpha=0.3)
 
 # Форматирование оси времени
+import matplotlib.dates as mdates
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d.%m %H:%M'))
 plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=1))
 plt.gcf().autofmt_xdate()  # Наклон подписей дат
@@ -63,16 +65,6 @@ for i in range(len(df)):
     elif 16 <= hour < 24:  # Вторая половина дня
         plt.axvspan(df['datetime'].iloc[i], df['datetime'].iloc[i] + pd.Timedelta(hours=1), 
                    alpha=0.1, color='lightcoral')
-
-# Добавляем легенду для периодов дня
-legend_elements = [
-    Patch(facecolor='lightgreen', alpha=0.3, label='Первая половина дня (8:00-16:00)'),
-    Patch(facecolor='lightcoral', alpha=0.3, label='Вторая половина дня (16:00-00:00)'),
-    Patch(facecolor='lightgray', alpha=0.3, label='Ночь (00:00-8:00)')
-]
-plt.legend(handles=legend_elements, loc='upper left')
-
-plt.tight_layout()
 
 # Показываем статистику
 print("\nСтатистика по VPN подключениям:")
