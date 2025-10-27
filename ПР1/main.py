@@ -2,8 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
+#https://www.kaggle.com/datasets/asaniczka/top-spotify-songs-in-73-countries-daily-updated 
 dat = pd.read_csv("universal_top_spotify_songs.csv")
-
+ 
 #Гипотеза: popularity песни положительно коррелирует с danceability.
 
 print(f"Всего записей: {len(dat)}")
